@@ -110,7 +110,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # Project Info
-st.markdown("<div class='header'>Age and Gender Prediction</div>", unsafe_allow_html=True)
+st.markdown("<div class='header'>Age and Gender Prediction System</div>", unsafe_allow_html=True)
 st.markdown("""
     <div class='subheader'>
     This app uses a deep learning model developed by <strong>Vinay Karthik Kumanduri</strong>, 
