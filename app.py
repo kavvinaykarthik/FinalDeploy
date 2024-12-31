@@ -65,7 +65,7 @@ def predict(frame):
     return predicted_gender, age, age_range
 
 # Streamlit Interface
-st.set_page_config(page_title="Age and Gender Prediction System", page_icon="👤", layout="centered")
+st.set_page_config(page_title="Age and Gender Prediction", page_icon="👤", layout="centered")
 
 # Add custom styles
 st.markdown("""
@@ -73,7 +73,7 @@ st.markdown("""
     .header {
         text-align: center;
         color: white;
-        font-size: 50px;
+        font-size: 80px;
         font-family: 'Arial', sans-serif;
     }
     .subheader {
@@ -106,17 +106,14 @@ st.markdown("""
         font-family: 'Arial', sans-serif;
         font-size: 16px;
     }
-    .vinay{
-    color:#2980B9;
-    }
     </style>
     """, unsafe_allow_html=True)
 
 # Project Info
-st.markdown("<div class='header'>Age and Gender Prediction System</div>", unsafe_allow_html=True)
+st.markdown("<div class='header'>Age and Gender Prediction</div>", unsafe_allow_html=True)
 st.markdown("""
     <div class='subheader'>
-    This app uses a deep learning model developed by <strong class = 'vinay'>Vinay Karthik Kumanduri</strong>, 
+    This app uses a deep learning model developed by <strong>Vinay Karthik Kumanduri</strong>, 
     <a href="https://vinaykarthik.netlify.app" target="_blank" style="color: #3498db; font-weight: bold;">Approach Me</a><br>
     It predicts the age and gender of a person based on their image. You can either upload an image or use the webcam to capture one and get predictions.
 </div>
