@@ -65,7 +65,7 @@ def predict(frame):
     return predicted_gender, age, age_range
 
 # Streamlit Interface
-st.set_page_config(page_title="Age and Gender Prediction", page_icon="👤", layout="centered")
+st.set_page_config(page_title="Age and Gender Prediction System", page_icon="👤", layout="centered")
 
 # Add custom styles
 st.markdown("""
@@ -73,7 +73,7 @@ st.markdown("""
     .header {
         text-align: center;
         color: white;
-        font-size: 80px;
+        font-size: 50px;
         font-family: 'Arial', sans-serif;
     }
     .subheader {
@@ -106,14 +106,17 @@ st.markdown("""
         font-family: 'Arial', sans-serif;
         font-size: 16px;
     }
+    .vinay{
+    color:#2980B9;
+    }
     </style>
     """, unsafe_allow_html=True)
 
 # Project Info
-st.markdown("<div class='header'>Age and Gender Prediction</div>", unsafe_allow_html=True)
+st.markdown("<div class='header'>Age and Gender Prediction System</div>", unsafe_allow_html=True)
 st.markdown("""
     <div class='subheader'>
-    This app uses a deep learning model developed by <strong>Vinay Karthik Kumanduri</strong>, 
+    This app uses a deep learning model developed by <strong class = 'vinay'>Vinay Karthik Kumanduri</strong>, 
     <a href="https://vinaykarthik.netlify.app" target="_blank" style="color: #3498db; font-weight: bold;">Approach Me</a><br>
     It predicts the age and gender of a person based on their image. You can either upload an image or use the webcam to capture one and get predictions.
 </div>
@@ -134,7 +137,25 @@ st.markdown("""
 # Choose between webcam or image upload
 mode = st.radio("Select input mode", ("Upload Image", "Use Webcam"))
 
-if mode == "Upload Image":
+if mode == "Use Webcam":
+    # Use Streamlit's camera input feature
+    image = st.camera_input("Take a picture")
+
+    if image is not None:
+        # Convert image to a format that can be processed
+        img = Image.open(image)
+        img = np.array(img)
+
+        # Make predictions
+        predicted_gender, age, age_range = predict(img)
+
+        # Display the image and results
+        st.image(img, caption="Captured Image", use_container_width=True)
+        st.write(f"**Predicted Gender:** {predicted_gender}")
+        st.write(f"**Predicted Age Range:** {age_range}")
+        st.write(f"**Predicted Age:** {age}")
+
+elif mode == "Upload Image":
     uploaded_image = st.file_uploader("Upload an Image", type=["jpg", "jpeg", "png"])
 
     if uploaded_image is not None:
@@ -150,44 +171,3 @@ if mode == "Upload Image":
         st.write(f"**Predicted Gender:** {predicted_gender}")
         st.write(f"**Predicted Age Range:** {age_range}")
         st.write(f"**Predicted Age:** {age}")
-
-elif mode == "Use Webcam":
-    # Initialize webcam
-    cap = cv2.VideoCapture(0)  # Use the first available camera
-
-    # Check if the webcam is opened correctly
-    if not cap.isOpened():
-        st.write("Error: Could not access the webcam.")
-    else:
-        # Create a placeholder to show the webcam feed
-        placeholder = st.empty()
-
-        # Display the "Capture Image" button outside of the loop
-        capture_button = st.button("Capture Image", key="capture_button", use_container_width=True)
-
-        # Stream video feed
-        if capture_button:
-            while True:
-                ret, frame = cap.read()
-                if not ret:
-                    break
-
-                # Display the frame on Streamlit
-                frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                placeholder.image(frame_rgb, channels="RGB", use_container_width=True)
-
-                # Make predictions with the captured frame
-                predicted_gender, age, age_range = predict(frame)
-
-                # Convert the image to base64 and embed in HTML
-                img_base64 = encode_image_to_base64(frame_rgb)
-                st.markdown(f'<img src="data:image/png;base64,{img_base64}" style="border-radius: 10px; box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);" width="100%" />', unsafe_allow_html=True)
-
-                # Display the results
-                st.write(f"**Predicted Gender:** {predicted_gender}")
-                st.write(f"**Predicted Age Range:** {age_range}")
-                st.write(f"**Predicted Age:** {age}")
-                break
-
-        # Release the webcam
-        cap.release()
