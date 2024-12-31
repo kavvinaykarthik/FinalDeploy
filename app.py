@@ -65,7 +65,7 @@ def predict(frame):
     return predicted_gender, age, age_range
 
 # Streamlit Interface
-st.set_page_config(page_title="Age and Gender Prediction", page_icon="👤", layout="centered")
+st.set_page_config(page_title="Age and Gender Prediction System", page_icon="👤", layout="centered")
 
 # Add custom styles
 st.markdown("""
