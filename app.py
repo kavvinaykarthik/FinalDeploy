@@ -73,7 +73,8 @@ st.markdown("""
     .header {
         text-align: center;
         color: white;
-        font-size: 80px;
+        background-color: #3498DB;
+        font-size: 50px;
         font-family: 'Arial', sans-serif;
     }
     .subheader {
