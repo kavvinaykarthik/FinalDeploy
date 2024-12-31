@@ -73,7 +73,6 @@ st.markdown("""
     .header {
         text-align: center;
         color: white;
-        background-color: #3498DB;
         font-size: 50px;
         font-family: 'Arial', sans-serif;
     }
