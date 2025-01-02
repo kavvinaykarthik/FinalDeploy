@@ -1,6 +1,7 @@
 numpy
 streamlit
 opencv-python-headless
+libgl1-mesa-glx
 tensorflow
 Pillow
 gdown
