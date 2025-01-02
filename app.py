@@ -1,6 +1,5 @@
 import numpy as np
 import streamlit as st
-import cv2
 from tensorflow.keras.models import load_model
 from tensorflow.keras.losses import MeanAbsoluteError
 from tensorflow.keras.utils import get_custom_objects
@@ -25,19 +24,19 @@ model = download_model_from_drive()
 # Gender prediction dictionary
 gender_dict = {0: 'Male', 1: 'Female'}
 
-# Image preprocessing function
+# Image preprocessing function (using Pillow)
 def preprocess_image(frame):
-    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    frame = cv2.resize(frame, (128, 128))
-    frame_array = frame / 255.0
-    frame_array = np.expand_dims(frame_array, axis=0)
+    # Convert the image to grayscale
+    frame = frame.convert("L")
+    frame = frame.resize((128, 128))  # Resize the image to 128x128
+    frame_array = np.array(frame) / 255.0  # Normalize the image
+    frame_array = np.expand_dims(frame_array, axis=0)  # Add batch dimension
     return frame_array
 
 # Function to encode image to base64
 def encode_image_to_base64(image):
-    _, buffer = cv2.imencode('.png', image)
-    img_bytes = buffer.tobytes()
-    img_base64 = base64.b64encode(img_bytes).decode('utf-8')
+    buffer = image.tobytes()  # Convert the image to bytes
+    img_base64 = base64.b64encode(buffer).decode('utf-8')
     return img_base64
 
 # Function to predict age and gender
