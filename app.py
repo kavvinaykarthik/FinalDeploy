@@ -33,20 +33,21 @@ if model is None:
 gender_dict = {0: 'Male', 1: 'Female'}
 
 # Image preprocessing function (Using PIL for grayscale conversion and resizing)
+
 def preprocess_image(frame):
-    # Convert to grayscale
-    frame = ImageOps.grayscale(frame)
+    # Convert PIL image to NumPy array if it's not already
+    if isinstance(frame, Image.Image):
+        frame = np.array(frame)
     
-    # Resize the image to 128x128
-    frame = frame.resize((128, 128))
+    # Check if the image is already grayscale (1 channel) or color (3 channels)
+    if len(frame.shape) == 3:
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     
-    # Convert to numpy array and normalize
-    frame_array = np.array(frame) / 255.0
-    
-    # Expand dimensions for the model input
-    frame_array = np.expand_dims(frame_array, axis=0)
-    
+    frame = cv2.resize(frame, (128, 128))
+    frame_array = frame / 255.0  # Normalize pixel values
+    frame_array = np.expand_dims(frame_array, axis=0)  # Add batch dimension
     return frame_array
+
 
 # Function to encode image to base64 (Not used but can be kept for future needs)
 def encode_image_to_base64(image):
