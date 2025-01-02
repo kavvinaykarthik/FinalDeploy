@@ -2,6 +2,7 @@ numpy
 streamlit
 opencv-python-headless
 opencv-python
+cv2
 tensorflow
 Pillow
 gdown
