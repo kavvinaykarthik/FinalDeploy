@@ -1,9 +1,10 @@
 import numpy as np
 import streamlit as st
+import cv2  # Make sure this import is present
 from tensorflow.keras.models import load_model
 from tensorflow.keras.losses import MeanAbsoluteError
 from tensorflow.keras.utils import get_custom_objects
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps  # Add ImageOps here if using it
 import gdown
 import base64
 
@@ -12,28 +13,19 @@ get_custom_objects()['mae'] = MeanAbsoluteError()
 
 # Download model from Google Drive
 def download_model_from_drive():
-    try:
-        file_id = '1jHc-XZ-mEQkj-l7-lVPILcqRiGrjPEg7'  # Replace with your actual file ID
-        output = 'age_gender_model2.h5'
-        gdown.download(f'https://drive.google.com/uc?export=download&id={file_id}', output, quiet=False)
-        model = load_model(output)
-        return model
-    except Exception as e:
-        st.error(f"Error downloading or loading the model: {str(e)}")
-        return None
+    file_id = '1jHc-XZ-mEQkj-l7-lVPILcqRiGrjPEg7'  # Replace with your actual file ID
+    output = 'age_gender_model2.h5'
+    gdown.download(f'https://drive.google.com/uc?export=download&id={file_id}', output, quiet=False)
+    model = load_model(output)
+    return model
 
-# Load model from Google Drive (Check if model is successfully loaded)
+# Load model from Google Drive
 model = download_model_from_drive()
-
-if model is None:
-    st.error("The model could not be loaded. Please try again later.")
-    st.stop()  # Stop execution if model is not available
 
 # Gender prediction dictionary
 gender_dict = {0: 'Male', 1: 'Female'}
 
-# Image preprocessing function (Using PIL for grayscale conversion and resizing)
-
+# Image preprocessing function
 def preprocess_image(frame):
     # Convert PIL image to NumPy array if it's not already
     if isinstance(frame, Image.Image):
@@ -48,8 +40,7 @@ def preprocess_image(frame):
     frame_array = np.expand_dims(frame_array, axis=0)  # Add batch dimension
     return frame_array
 
-
-# Function to encode image to base64 (Not used but can be kept for future needs)
+# Function to encode image to base64
 def encode_image_to_base64(image):
     _, buffer = cv2.imencode('.png', image)
     img_bytes = buffer.tobytes()
@@ -158,16 +149,18 @@ if mode == "Use Webcam":
     image = st.camera_input("Take a picture")
 
     if image is not None:
-        # Process and predict
+        # Convert image to a format that can be processed
         img = Image.open(image)
         img = np.array(img)
+
+        # Make predictions
         predicted_gender, age, age_range = predict(img)
+
+        # Display the image and results
         st.image(img, caption="Captured Image", use_container_width=True)
         st.write(f"**Predicted Gender:** {predicted_gender}")
         st.write(f"**Predicted Age Range:** {age_range}")
         st.write(f"**Predicted Age:** {age}")
-    else:
-        st.warning("Please enable your webcam to take a picture.")
 
 elif mode == "Upload Image":
     uploaded_image = st.file_uploader("Upload an Image", type=["jpg", "jpeg", "png"])
@@ -176,7 +169,11 @@ elif mode == "Upload Image":
         # Open and process the uploaded image
         img = Image.open(uploaded_image)
         img = np.array(img)
+
+        # Make predictions
         predicted_gender, age, age_range = predict(img)
+
+        # Display the results
         st.image(img, caption="Uploaded Image", use_container_width=True)
         st.write(f"**Predicted Gender:** {predicted_gender}")
         st.write(f"**Predicted Age Range:** {age_range}")
